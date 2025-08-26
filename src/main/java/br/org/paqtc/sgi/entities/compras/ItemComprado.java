@@ -39,7 +39,7 @@ public class ItemComprado {
     @Column(name = "idItemCompras_NuSolicitacao")
     private Long idSolicitacao;
 
-    public ItemCompradoDto getToDto() {
+    public ItemCompradoDto toDto() {
         return ItemCompradoDto.builder()
                 .id(id)
                 .nome(nome)
