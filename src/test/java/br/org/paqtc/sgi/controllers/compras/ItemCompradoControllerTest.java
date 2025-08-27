@@ -65,6 +65,40 @@ class ItemCompradoControllerTest {
     }
 
     @Nested
+    @DisplayName("Buscando todos os itens de compra por ID")
+    class GetAllItensComprasById {
+
+        @Test
+        @DisplayName("Quando Busco todos os itens de compra por ID sucesso")
+        void testBuscandoItensCompradosComSucesso() throws Exception {
+            String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS + "/315")
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            ItemCompradoDto respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
+            assertNotNull(respostas);
+            assertEquals(315, respostas.getId());
+            assertEquals("Notebook ga", respostas.getNome());
+        }
+
+        @Test
+        @DisplayName("Quando Busco todos os itens de compra com ID não existente")
+        void testBuscandoItensCompradosNaoExistente() throws Exception {
+            String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS + "/100000000")
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andExpect(status().isNotFound())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            ExceptionDto respostas = objectMapper.readValue(responseJsonString, ExceptionDto.class);
+            assertNotNull(respostas);
+            assertEquals("O id 100000000 não foi encontrado!", respostas.getMessage());
+        }
+    }
+
+    @Nested
     @DisplayName("Buscando todos os itens de compra que contem o mesmo nome")
     class GetAllItensComprasByName {
 
