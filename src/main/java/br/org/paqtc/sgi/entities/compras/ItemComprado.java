@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemComprado {
+public class ItemComprado implements Serializable {
     @Id
     @Column(name = "iditemcompras")
     private Long id;
@@ -39,7 +40,7 @@ public class ItemComprado {
     @Column(name = "idItemCompras_NuSolicitacao")
     private Long idSolicitacao;
 
-    public ItemCompradoDto getToDto() {
+    public ItemCompradoDto toDto() {
         return ItemCompradoDto.builder()
                 .id(id)
                 .nome(nome)

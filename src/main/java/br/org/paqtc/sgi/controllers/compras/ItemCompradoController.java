@@ -3,16 +3,18 @@ package br.org.paqtc.sgi.controllers.compras;
 import br.org.paqtc.sgi.dto.ItemCompradoDto;
 import br.org.paqtc.sgi.entities.compras.ItemComprado;
 import br.org.paqtc.sgi.services.ItemCompradoService;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/itens-comprados")
+@Validated
 public class ItemCompradoController {
 
     private final ItemCompradoService itemCompradoService;
@@ -23,7 +25,18 @@ public class ItemCompradoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemCompradoDto>> getAllItemComprado() {
-        return ResponseEntity.ok(itemCompradoService.getItemComprado());
+    public ResponseEntity<List<ItemCompradoDto>> getAllItemComprado(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) Long numeroSolicitacao
+    ) {
+        return ResponseEntity.ok(itemCompradoService.getItemComprado(
+                nome,
+                numeroSolicitacao
+        ));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemCompradoDto> getItemCompradoById(@PathVariable Long id) {
+        return ResponseEntity.ok(itemCompradoService.getItemCompradoById(id));
     }
 }

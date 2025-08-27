@@ -2,6 +2,7 @@ package br.org.paqtc.sgi.services;
 
 import br.org.paqtc.sgi.dto.ItemCompradoDto;
 import br.org.paqtc.sgi.entities.compras.ItemComprado;
+import br.org.paqtc.sgi.exceptions.ItemCompradoNaoExisteException;
 import br.org.paqtc.sgi.repositories.ItemCompradoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,42 @@ public class ItemCompradoService {
     }
 
     @Transactional
-    public List<ItemCompradoDto> getItemComprado() {
-        return itemCompradoRepository.findAll().stream().map(ItemComprado::getToDto).toList();
+    public List<ItemCompradoDto> getItemComprado(String nome, Long numeroSolicitacao) {
+        if (nome != null && numeroSolicitacao != null) {
+            List<ItemCompradoDto> itemCompradoDtos = itemCompradoRepository
+                    .findByNomeContainingIgnoreCaseAndIdSolicitacao(nome, numeroSolicitacao)
+                    .stream().map(ItemComprado::toDto).toList();
+            if (itemCompradoDtos.isEmpty()) {
+                throw new ItemCompradoNaoExisteException(
+                        "O item com nome " + nome + " e número de solicitação "
+                                + numeroSolicitacao + " não foi encontrado!"
+                );
+            }
+            return itemCompradoDtos;
+        } else if (nome != null) {
+            List<ItemCompradoDto> itemCompradoDtos = itemCompradoRepository
+                    .findByNomeContainingIgnoreCase(nome)
+                    .stream().map(ItemComprado::toDto).toList();
+            if (itemCompradoDtos.isEmpty()) {
+                throw new ItemCompradoNaoExisteException("O item com nome " + nome + " não foi encontrado!");
+            }
+            return itemCompradoDtos;
+        } else if (numeroSolicitacao != null) {
+            List<ItemCompradoDto> itemCompradoDtos = itemCompradoRepository
+                    .findByIdSolicitacao(numeroSolicitacao)
+                    .stream().map(ItemComprado::toDto).toList();
+            if (itemCompradoDtos.isEmpty()) {
+                throw new ItemCompradoNaoExisteException("O item com número de solicitação "
+                        + numeroSolicitacao + " não foi encontrado!");
+            }
+            return itemCompradoDtos;
+        }
+        return itemCompradoRepository.findAll().stream().map(ItemComprado::toDto).toList();
+    }
+
+    public ItemCompradoDto getItemCompradoById(Long id) {
+        return itemCompradoRepository.findById(id)
+                .map(ItemComprado::toDto)
+                .orElseThrow(() -> new ItemCompradoNaoExisteException("O id " + id + " não foi encontrado!"));
     }
 }
