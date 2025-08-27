@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface ItemCompradoRepository extends JpaRepository<ItemComprado, Long> {
-    List<ItemComprado> findByNomeContainingIgnoreCaseAndIdSolicitacao(String nome, Long idSolicitacao);
+    List<ItemComprado> findByNomeContainingIgnoreCaseAndAndSolicitacao_NumeroSolicitacao(String nome, Long idSolicitacao);
 
     List<ItemComprado> findByNomeContainingIgnoreCase(String nome);
 
-    List<ItemComprado> findByIdSolicitacao(Long numeroSolicitacao);
+    List<ItemComprado> findBySolicitacao_NumeroSolicitacao(Long numeroSolicitacao);
 }

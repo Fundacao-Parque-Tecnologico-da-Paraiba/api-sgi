@@ -1,5 +1,6 @@
 package br.org.paqtc.sgi.entities.solicitacoes;
 
+import br.org.paqtc.sgi.dto.SolicitacoesDto;
 import br.org.paqtc.sgi.entities.ids.SolicitacaoId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -185,4 +186,14 @@ public class Solicitacoes implements Serializable {
 
     @Column(name = "data_comprador", length = 10)
     private String dataComprador;
+
+    public SolicitacoesDto toDto() {
+        return SolicitacoesDto.builder()
+                .nomeProjeto(nomeProjeto)
+                .nomeCoordenador(nomeCoordenador)
+                .dataSolicitacao(dataSolicitacao)
+                .numeroSolicitacao(numeroSolicitacao)
+                .situacao(situacao)
+                .build();
+    }
 }

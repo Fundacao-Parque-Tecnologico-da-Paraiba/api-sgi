@@ -23,7 +23,7 @@ public class ItemCompradoService {
     public List<ItemCompradoDto> getItemComprado(String nome, Long numeroSolicitacao) {
         if (nome != null && numeroSolicitacao != null) {
             List<ItemCompradoDto> itemCompradoDtos = itemCompradoRepository
-                    .findByNomeContainingIgnoreCaseAndIdSolicitacao(nome, numeroSolicitacao)
+                    .findByNomeContainingIgnoreCaseAndAndSolicitacao_NumeroSolicitacao(nome, numeroSolicitacao)
                     .stream().map(ItemComprado::toDto).toList();
             if (itemCompradoDtos.isEmpty()) {
                 throw new ItemCompradoNaoExisteException(
@@ -42,7 +42,7 @@ public class ItemCompradoService {
             return itemCompradoDtos;
         } else if (numeroSolicitacao != null) {
             List<ItemCompradoDto> itemCompradoDtos = itemCompradoRepository
-                    .findByIdSolicitacao(numeroSolicitacao)
+                    .findBySolicitacao_NumeroSolicitacao(numeroSolicitacao)
                     .stream().map(ItemComprado::toDto).toList();
             if (itemCompradoDtos.isEmpty()) {
                 throw new ItemCompradoNaoExisteException("O item com número de solicitação "

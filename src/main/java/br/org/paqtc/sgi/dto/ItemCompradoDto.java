@@ -37,5 +37,5 @@ public class ItemCompradoDto {
     private String valorTotal;
 
     @JsonProperty("numero_de_solicitacao")
-    private Long idSolicitacao;
+    private SolicitacoesDto idSolicitacao;
 }
