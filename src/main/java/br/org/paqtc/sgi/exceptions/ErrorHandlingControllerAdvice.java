@@ -33,6 +33,15 @@ public class ErrorHandlingControllerAdvice {
         );
     }
 
+    @ExceptionHandler(ItemCompradoNaoExisteException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ExceptionDto onCommerceException(ItemCompradoNaoExisteException generalException) {
+        return construtorPadraoDeErros(
+                generalException.getMessage()
+        );
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

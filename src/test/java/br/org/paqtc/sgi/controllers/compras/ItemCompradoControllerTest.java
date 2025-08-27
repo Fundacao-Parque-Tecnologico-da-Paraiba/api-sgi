@@ -1,9 +1,11 @@
 package br.org.paqtc.sgi.controllers.compras;
 
+import br.org.paqtc.sgi.dto.ExceptionDto;
 import br.org.paqtc.sgi.dto.ItemCompradoDto;
 import br.org.paqtc.sgi.repositories.ItemCompradoRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,13 +40,18 @@ class ItemCompradoControllerTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+    @BeforeEach
+    void setUp() {
+        objectMapper.registerModule(new JavaTimeModule());
+    }
+
     @Nested
     @DisplayName("Buscando todos os itens de compra")
     class GetAllItensCompras {
 
         @Test
         @DisplayName("Quando Busco todos os itens de compra com sucesso")
-        void testBuscandoItensCOmpradosComSucesso() throws Exception {
+        void testBuscandoItensCompradosComSucesso() throws Exception {
             String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
@@ -54,6 +61,78 @@ class ItemCompradoControllerTest {
             assertNotNull(respostas);
             assertFalse(respostas.isEmpty());
             assertEquals(330, respostas.size());
+        }
+    }
+
+    @Nested
+    @DisplayName("Buscando todos os itens de compra que contem o mesmo nome")
+    class GetAllItensComprasByName {
+
+        @Test
+        @DisplayName("Quando Busco todos os itens de compra que contem o mesmo nome com sucesso")
+        void testBuscandoItensCompradosComSucesso() throws Exception {
+            String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("nome", "notebook")
+                    )
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            List<ItemCompradoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
+            assertNotNull(respostas);
+            assertFalse(respostas.isEmpty());
+            assertEquals(20, respostas.size());
+        }
+
+        @Test
+        @DisplayName("Quando Busco todos os itens de compra que contem o mesmo nome não existente")
+        void testBuscandoItensCompradosNaoExistente() throws Exception {
+            String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("nome", "blablabla")
+                    )
+                    .andExpect(status().isNotFound())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            ExceptionDto respostas = objectMapper.readValue(responseJsonString, ExceptionDto.class);
+            assertNotNull(respostas);
+            assertEquals("O item com nome blablabla não foi encontrado!", respostas.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("Buscando todos os itens de compra que contem o mesmo numero de solicitação")
+    class GetAllItensComprasByNumeroSolicitacao {
+
+        @Test
+        @DisplayName("Quando Busco todos os itens de compra que contem o mesmo numero de solicitação com sucesso")
+        void testBuscandoItensCompradosComSucesso() throws Exception {
+            String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("numeroSolicitacao", "25054")
+                    )
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            List<ItemCompradoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
+            assertNotNull(respostas);
+            assertFalse(respostas.isEmpty());
+            assertEquals(1, respostas.size());
+        }
+
+        @Test
+        @DisplayName("Quando Busco todos os itens de compra que contem o mesmo numero de solicitação não existente")
+        void testBuscandoItensCompradosNaoExistente() throws Exception {
+            String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("numeroSolicitacao", "00001112")
+                    )
+                    .andExpect(status().isNotFound())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            ExceptionDto respostas = objectMapper.readValue(responseJsonString, ExceptionDto.class);
+            assertNotNull(respostas);
+            assertEquals("O item com número de solicitação 1112 não foi encontrado!", respostas.getMessage());
         }
     }
 }

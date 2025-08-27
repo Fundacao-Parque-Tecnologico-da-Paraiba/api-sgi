@@ -22,17 +22,33 @@ public class ItemCompradoService {
     @Transactional
     public List<ItemCompradoDto> getItemComprado(String nome, Long numeroSolicitacao) {
         if (nome != null && numeroSolicitacao != null) {
-            return itemCompradoRepository
+            List<ItemCompradoDto> itemCompradoDtos = itemCompradoRepository
                     .findByNomeContainingIgnoreCaseAndIdSolicitacao(nome, numeroSolicitacao)
                     .stream().map(ItemComprado::toDto).toList();
+            if (itemCompradoDtos.isEmpty()) {
+                throw new ItemCompradoNaoExisteException(
+                        "O item com nome " + nome + " e número de solicitação "
+                                + numeroSolicitacao + " não foi encontrado!"
+                );
+            }
+            return itemCompradoDtos;
         } else if (nome != null) {
-            return  itemCompradoRepository
+            List<ItemCompradoDto> itemCompradoDtos = itemCompradoRepository
                     .findByNomeContainingIgnoreCase(nome)
                     .stream().map(ItemComprado::toDto).toList();
+            if (itemCompradoDtos.isEmpty()) {
+                throw new ItemCompradoNaoExisteException("O item com nome " + nome + " não foi encontrado!");
+            }
+            return itemCompradoDtos;
         } else if (numeroSolicitacao != null) {
-            return itemCompradoRepository
+            List<ItemCompradoDto> itemCompradoDtos = itemCompradoRepository
                     .findByIdSolicitacao(numeroSolicitacao)
                     .stream().map(ItemComprado::toDto).toList();
+            if (itemCompradoDtos.isEmpty()) {
+                throw new ItemCompradoNaoExisteException("O item com número de solicitação "
+                        + numeroSolicitacao + " não foi encontrado!");
+            }
+            return itemCompradoDtos;
         }
         return itemCompradoRepository.findAll().stream().map(ItemComprado::toDto).toList();
     }
