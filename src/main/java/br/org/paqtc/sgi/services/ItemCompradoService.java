@@ -63,10 +63,6 @@ public class ItemCompradoService {
             filtros.add("número de solicitação = " + numeroSolicitacao);
         }
 
-        if (filtros.isEmpty()) {
-            return "Nenhum item encontrado!";
-        }
-
         mensagem.append(String.join(", ", filtros));
         return mensagem.toString();
     }

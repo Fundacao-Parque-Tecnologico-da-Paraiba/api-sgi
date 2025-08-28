@@ -10,10 +10,6 @@ public enum SituacaoProjeto {
         this.descricao = descricao;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
     public static SituacaoProjeto getByDescricao(String descricao){
         return descricao.equals("Finalizado") ? FINALIZADO : VIGENTE;
     }

@@ -42,6 +42,15 @@ public class ErrorHandlingControllerAdvice {
         );
     }
 
+    @ExceptionHandler(ProjetoNaoExisteException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ExceptionDto onCommerceException(ProjetoNaoExisteException generalException) {
+        return construtorPadraoDeErros(
+                generalException.getMessage()
+        );
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

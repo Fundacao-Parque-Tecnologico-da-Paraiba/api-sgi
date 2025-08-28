@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/projetos")
 @Validated
 public class ProjetosController {
+
     private final ProjetosService projetosService;
 
     public ProjetosController(ProjetosService projetosService) {

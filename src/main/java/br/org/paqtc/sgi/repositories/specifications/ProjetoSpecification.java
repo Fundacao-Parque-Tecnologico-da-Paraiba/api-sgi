@@ -22,8 +22,17 @@ public class ProjetoSpecification {
     }
 
     public static Specification<Projeto> monitorContains(String nomeMonitor) {
-        return (root, query, cb) ->
-                nomeMonitor == null ? null : cb.like(cb.lower(root.get("monitor")), "%" + nomeMonitor.toLowerCase() + "%");
+        return (root, query, cb) -> {
+            if (nomeMonitor == null) {
+                return null;
+            }
+            String pattern = "%" + nomeMonitor.toLowerCase() + "%";
+            return cb.or(
+                    cb.like(cb.lower(root.get("monitor")), pattern),
+                    cb.like(cb.lower(root.get("monitor1")), pattern),
+                    cb.like(cb.lower(root.get("monitor2")), pattern)
+            );
+        };
     }
 
     public static Specification<Projeto> situacaoEquals(SituacaoProjeto situacaoProjeto) {

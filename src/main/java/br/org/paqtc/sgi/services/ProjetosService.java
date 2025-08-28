@@ -82,10 +82,6 @@ public class ProjetosService {
             filtros.add("situação = " + situacaoProjeto.name());
         }
 
-        if (filtros.isEmpty()) {
-            return "Nenhum projeto encontrado!";
-        }
-
         mensagem.append(String.join(", ", filtros));
         return mensagem.toString();
     }
