@@ -35,3 +35,12 @@ jobs:
       run: docker build -t franciscodantas/sgi .
     - name: Push image docker
       run: docker push franciscodantas/sgi
+
+  depĺoy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image
+        run: docker pull franciscodantas/sgi:latest
+      - name: Run docker container
+        run: docker run -d -p 8080:8080 --name sgi franciscodantas/sgi
