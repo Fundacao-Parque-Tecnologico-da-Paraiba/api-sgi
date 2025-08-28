@@ -42,5 +42,7 @@ jobs:
     steps:
       - name: Pull image
         run: docker pull franciscodantas/sgi:latest
+      - name: Remove
+        run: docker rm -f sgi
       - name: Run docker container
         run: docker run -d -p 8080:8080 --name sgi franciscodantas/sgi
