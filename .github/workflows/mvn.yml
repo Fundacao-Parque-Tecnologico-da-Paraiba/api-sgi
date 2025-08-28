@@ -34,4 +34,4 @@ jobs:
     - name: Build docker image
       run: docker build -t franciscodantas/sgi .
     - name: Push image docker
-      run: docker push franciscodantas/sgi:lastest
+      run: docker push franciscodantas/sgi
