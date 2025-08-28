@@ -4,7 +4,6 @@ import br.org.paqtc.sgi.dto.ItemCompradoDto;
 import br.org.paqtc.sgi.entities.compras.ItemComprado;
 import br.org.paqtc.sgi.exceptions.ItemCompradoNaoExisteException;
 import br.org.paqtc.sgi.repositories.ItemCompradoRepository;
-import br.org.paqtc.sgi.repositories.UsuarioRepository;
 import br.org.paqtc.sgi.repositories.specifications.ItemCompradoSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class ItemCompradoService {
     private final ItemCompradoRepository itemCompradoRepository;
 
     @Autowired
-    public ItemCompradoService(ItemCompradoRepository itemCompradoRepository, UsuarioRepository usuarioRepository) {
+    public ItemCompradoService(ItemCompradoRepository itemCompradoRepository) {
         this.itemCompradoRepository = itemCompradoRepository;
     }
 
