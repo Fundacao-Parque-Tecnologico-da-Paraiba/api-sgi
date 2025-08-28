@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.org.paqtc</groupId>
 	<artifactId>sgi</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>sgi</name>
 	<description>API para o Parque Tecnológico da Paraíba do Banco do SGI</description>
 	<url/>
