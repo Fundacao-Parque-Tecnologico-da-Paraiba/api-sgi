@@ -3,12 +3,13 @@ package br.org.paqtc.sgi.repositories;
 import br.org.paqtc.sgi.dto.ItemCompradoDto;
 import br.org.paqtc.sgi.entities.compras.ItemComprado;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ItemCompradoRepository extends JpaRepository<ItemComprado, Long> {
+public interface ItemCompradoRepository extends JpaRepository<ItemComprado, Long>, JpaSpecificationExecutor<ItemComprado> {
     List<ItemComprado> findByNomeContainingIgnoreCaseAndAndSolicitacao_NumeroSolicitacao(String nome, Long idSolicitacao);
 
     List<ItemComprado> findByNomeContainingIgnoreCase(String nome);

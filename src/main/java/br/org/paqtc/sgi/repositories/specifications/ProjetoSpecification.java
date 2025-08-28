@@ -1,0 +1,33 @@
+package br.org.paqtc.sgi.repositories.specifications;
+
+import br.org.paqtc.sgi.entities.enums.SituacaoProjeto;
+import br.org.paqtc.sgi.entities.projetos.Projeto;
+import org.springframework.data.jpa.domain.Specification;
+
+public class ProjetoSpecification {
+
+    public static Specification<Projeto> nomeProjetoContains(String nomeProjeto) {
+        return (root, query, cb) ->
+                nomeProjeto == null ? null : cb.like(cb.lower(root.get("nome")), "%" + nomeProjeto.toLowerCase() + "%");
+    }
+
+    public static Specification<Projeto> coordenadorContains(String nomeCoordenador) {
+        return (root, query, cb) ->
+                nomeCoordenador == null ? null : cb.like(cb.lower(root.get("coordenador")), "%" + nomeCoordenador.toLowerCase() + "%");
+    }
+
+    public static Specification<Projeto> gerenteContains(String nomeGerente) {
+        return (root, query, cb) ->
+                nomeGerente == null ? null : cb.like(cb.lower(root.get("gerente")), "%" + nomeGerente.toLowerCase() + "%");
+    }
+
+    public static Specification<Projeto> monitorContains(String nomeMonitor) {
+        return (root, query, cb) ->
+                nomeMonitor == null ? null : cb.like(cb.lower(root.get("monitor")), "%" + nomeMonitor.toLowerCase() + "%");
+    }
+
+    public static Specification<Projeto> situacaoEquals(SituacaoProjeto situacaoProjeto) {
+        return (root, query, cb) ->
+                situacaoProjeto == null ? null : cb.equal(root.get("situacao"), situacaoProjeto.name());
+    }
+}

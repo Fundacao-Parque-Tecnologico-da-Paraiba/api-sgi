@@ -130,7 +130,7 @@ class ItemCompradoControllerTest {
                     .andReturn().getResponse().getContentAsString();
             ExceptionDto respostas = objectMapper.readValue(responseJsonString, ExceptionDto.class);
             assertNotNull(respostas);
-            assertEquals("O item com nome blablabla não foi encontrado!", respostas.getMessage());
+            assertEquals("Nenhum item comprado encontrado com os filtros: nome do item = blablabla", respostas.getMessage());
         }
     }
 
@@ -168,7 +168,7 @@ class ItemCompradoControllerTest {
                     .andReturn().getResponse().getContentAsString();
             ExceptionDto respostas = objectMapper.readValue(responseJsonString, ExceptionDto.class);
             assertNotNull(respostas);
-            assertEquals("O item com nome blablabla e número de solicitação 21389 não foi encontrado!", respostas.getMessage());
+            assertEquals("Nenhum item comprado encontrado com os filtros: nome do item = blablabla, número de solicitação = 21389", respostas.getMessage());
         }
     }
 
@@ -204,7 +204,7 @@ class ItemCompradoControllerTest {
                     .andReturn().getResponse().getContentAsString();
             ExceptionDto respostas = objectMapper.readValue(responseJsonString, ExceptionDto.class);
             assertNotNull(respostas);
-            assertEquals("O item com número de solicitação 1112 não foi encontrado!", respostas.getMessage());
+            assertEquals("Nenhum item comprado encontrado com os filtros: número de solicitação = 1112", respostas.getMessage());
         }
     }
 }

@@ -5,10 +5,13 @@ import br.org.paqtc.sgi.entities.compras.ItemComprado;
 import br.org.paqtc.sgi.exceptions.ItemCompradoNaoExisteException;
 import br.org.paqtc.sgi.repositories.ItemCompradoRepository;
 import br.org.paqtc.sgi.repositories.UsuarioRepository;
+import br.org.paqtc.sgi.repositories.specifications.ItemCompradoSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,28 +43,31 @@ public class ItemCompradoService {
     }
 
     private List<ItemComprado> buscarItens(String nome, Long numeroSolicitacao) {
-        List<ItemComprado> itemComprados = null;
-        if (nome != null && numeroSolicitacao != null) {
-            itemComprados = itemCompradoRepository.findByNomeContainingIgnoreCaseAndAndSolicitacao_NumeroSolicitacao(nome, numeroSolicitacao);
-        } else if (nome != null) {
-            itemComprados = itemCompradoRepository.findByNomeContainingIgnoreCase(nome);
-        } else if (numeroSolicitacao != null) {
-            itemComprados = itemCompradoRepository.findBySolicitacao_NumeroSolicitacao(numeroSolicitacao);
-        } else {
-            itemComprados = itemCompradoRepository.findAll();
-        }
-        return itemComprados;
+        return itemCompradoRepository.findAll(
+                Specification.allOf(
+                        ItemCompradoSpecification.nomeContains(nome),
+                        ItemCompradoSpecification.numeroSolicitacaoEquals(numeroSolicitacao)
+                )
+        );
     }
 
     private String mensagemErro(String nome, Long numeroSolicitacao) {
-        String mensagemErro = "Nenhum item encontrado!";
-        if (nome != null && numeroSolicitacao != null) {
-            mensagemErro = String.format("O item com nome %s e número de solicitação %d não foi encontrado!", nome, numeroSolicitacao);
-        } else if (nome != null) {
-            mensagemErro = String.format("O item com nome %s não foi encontrado!", nome);
-        } else if (numeroSolicitacao != null) {
-            mensagemErro = String.format("O item com número de solicitação %d não foi encontrado!", numeroSolicitacao);
+        StringBuilder mensagem = new StringBuilder("Nenhum item comprado encontrado com os filtros: ");
+
+        List<String> filtros = new ArrayList<>();
+
+        if (nome != null) {
+            filtros.add("nome do item = " + nome);
         }
-        return mensagemErro;
+        if (numeroSolicitacao != null) {
+            filtros.add("número de solicitação = " + numeroSolicitacao);
+        }
+
+        if (filtros.isEmpty()) {
+            return "Nenhum item encontrado!";
+        }
+
+        mensagem.append(String.join(", ", filtros));
+        return mensagem.toString();
     }
 }
