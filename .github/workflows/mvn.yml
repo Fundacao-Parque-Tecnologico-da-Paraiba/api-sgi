@@ -36,7 +36,7 @@ jobs:
     - name: Push image docker
       run: docker push franciscodantas/sgi
 
-  depĺoy:
+  deploy:
     needs: build
     runs-on: self-hosted
     steps:
