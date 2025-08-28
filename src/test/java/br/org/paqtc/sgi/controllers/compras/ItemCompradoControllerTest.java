@@ -135,6 +135,44 @@ class ItemCompradoControllerTest {
     }
 
     @Nested
+    @DisplayName("Buscando todos os itens de compra que contem o mesmo nome e numero de solicitação")
+    class GetAllItensComprasByNameAndSolicitacao {
+
+        @Test
+        @DisplayName("Quando Busco todos os itens de compra que contem o mesmo nome com sucesso")
+        void testBuscandoItensCompradosComSucesso() throws Exception {
+            String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("nome", "notebook")
+                            .param("numeroSolicitacao", "21389")
+                    )
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            List<ItemCompradoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
+            assertNotNull(respostas);
+            assertFalse(respostas.isEmpty());
+            assertEquals(1, respostas.size());
+        }
+
+        @Test
+        @DisplayName("Quando Busco todos os itens de compra que contem o mesmo nome não existente")
+        void testBuscandoItensCompradosNaoExistente() throws Exception {
+            String responseJsonString = driver.perform(get(URI_ITENS_COMPRADOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("nome", "blablabla")
+                            .param("numeroSolicitacao", "21389")
+                    )
+                    .andExpect(status().isNotFound())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            ExceptionDto respostas = objectMapper.readValue(responseJsonString, ExceptionDto.class);
+            assertNotNull(respostas);
+            assertEquals("O item com nome blablabla e número de solicitação 21389 não foi encontrado!", respostas.getMessage());
+        }
+    }
+
+    @Nested
     @DisplayName("Buscando todos os itens de compra que contem o mesmo numero de solicitação")
     class GetAllItensComprasByNumeroSolicitacao {
 
