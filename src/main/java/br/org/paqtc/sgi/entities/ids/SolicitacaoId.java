@@ -20,7 +20,7 @@ public class SolicitacaoId implements Serializable {
     private Integer idAno;
 
     @Column(name = "tsUsuario_idUsuario")
-    private Integer idUsuario;
+    private Long idUsuario;
 
     @Column(name = "tsProjeto_idProjeto")
     private Integer idProjeto;
