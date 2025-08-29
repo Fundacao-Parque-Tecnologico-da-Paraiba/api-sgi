@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProjetosRepository extends JpaRepository<Projeto, ProjetoId>, JpaSpecificationExecutor<Projeto> {
+    List<Projeto> findAllById_IdProjeto(Long idPorjeto);
 }
