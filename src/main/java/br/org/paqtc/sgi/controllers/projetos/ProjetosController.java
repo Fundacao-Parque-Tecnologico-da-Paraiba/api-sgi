@@ -1,6 +1,7 @@
 package br.org.paqtc.sgi.controllers.projetos;
 
 import br.org.paqtc.sgi.dto.MembroProjetoDto;
+import br.org.paqtc.sgi.dto.MembrosPorProjetoDto;
 import br.org.paqtc.sgi.dto.ProjetoDto;
 import br.org.paqtc.sgi.entities.enums.SituacaoProjeto;
 import br.org.paqtc.sgi.services.MembroProjetoService;
@@ -44,7 +45,7 @@ public class ProjetosController {
     }
 
     @GetMapping("/membros")
-    public ResponseEntity<List<MembroProjetoDto>> getMembros(
+    public ResponseEntity<List<MembrosPorProjetoDto>> getMembros(
             @RequestParam(required = false) String nomeProjeto,
             @RequestParam(required = false) Long idProjeto
     ){

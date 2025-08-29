@@ -1,6 +1,7 @@
 package br.org.paqtc.sgi.services;
 
 import br.org.paqtc.sgi.dto.MembroProjetoDto;
+import br.org.paqtc.sgi.dto.MembrosPorProjetoDto;
 import br.org.paqtc.sgi.entities.projetos.MembroProjeto;
 import br.org.paqtc.sgi.entities.projetos.Projeto;
 import br.org.paqtc.sgi.repositories.MembroProjetoRepository;
@@ -24,39 +25,52 @@ public class MembroProjetoService {
         this.projetosRepository = projetosRepository;
     }
 
-    public List<MembroProjetoDto> getMembrosDoProjeto(String nomeProjeto, Long idProjeto) {
+    public List<MembrosPorProjetoDto> getMembrosDoProjeto(String nomeProjeto, Long idProjeto) {
+        List<Projeto> projetos;
+
         if (nomeProjeto == null && idProjeto == null) {
-            return membroProjetoRepository.findAll().stream().map(MembroProjeto::toDto).toList();
+            projetos = projetosRepository.findAll();
+        } else if (idProjeto != null) {
+            projetos = projetosRepository.findAllById_IdProjeto(idProjeto);
+        } else {
+            projetos = projetosRepository.findAll(
+                    ProjetoSpecification.nomeProjetoContains(nomeProjeto)
+            );
         }
-        if (idProjeto != null) {
-            List<MembroProjeto> membroProjetos = buscarMembrosDoProjeto(Collections.singletonList(idProjeto));
-            return membroProjetos.stream()
-                    .map(
-                            projeto -> {
-                                MembroProjetoDto membroProjetoDto = projeto.toDto();
-                                membroProjetoDto.setIdProjeto(projeto.getId().getIdProjeto());
-                                return membroProjetoDto;
-                            }
-                    )
-                    .toList();
+
+        if (projetos.isEmpty()) {
+            return Collections.emptyList();
         }
-        List<Projeto> projetos = projetosRepository.findAll(
-                ProjetoSpecification.nomeProjetoContains(nomeProjeto)
-        );
+
         Map<Long, Projeto> ids = projetos.stream()
                 .collect(Collectors.toMap(
-                        projeto -> projeto.getId().getIdProjeto(),
-                        projeto -> projeto
+                        p -> p.getId().getIdProjeto(),
+                        p -> p
                 ));
-        List<MembroProjeto> membroProjetos = buscarMembrosDoProjeto(ids.keySet().stream().toList());
-        return membroProjetos.stream()
-                .map(
-                        membroProjeto -> {
-                            MembroProjetoDto membroProjetoDto = membroProjeto.toDto();
-                            Projeto projeto = ids.get(membroProjeto.getId().getIdProjeto());
-                            membroProjetoDto.setNomeProjeto(projeto.getNome());
-                            return membroProjetoDto;
-                        }
+
+        List<MembroProjeto> membroProjetos = buscarMembrosDoProjeto(
+                new ArrayList<>(ids.keySet())
+        );
+
+        Map<Long, List<MembroProjetoDto>> membrosAgrupados = membroProjetos.stream()
+                .map(membro -> {
+                    MembroProjetoDto dto = membro.toDto();
+                    Projeto projeto = ids.get(membro.getId().getIdProjeto());
+                    if (projeto != null) {
+                        dto.setNomeProjeto(projeto.getNome());
+                    }
+                    return dto;
+                }).sorted()
+                .collect(Collectors.groupingBy(MembroProjetoDto::getIdProjeto));
+
+        return ids.values().stream()
+                .map(projeto -> MembrosPorProjetoDto.builder()
+                        .idProjeto(projeto.getId().getIdProjeto())
+                        .nomeProjeto(projeto.getNome())
+                        .membroProjetoDtos(
+                                membrosAgrupados.getOrDefault(projeto.getId().getIdProjeto(), Collections.emptyList())
+                        )
+                        .build()
                 )
                 .toList();
     }
