@@ -1,4 +1,4 @@
-package br.org.paqtc.sgi.entities.enums;
+package br.org.paqtc.sgi.entities.dbconf.enums;
 
 public enum SituacaoProjeto {
     FINALIZADO("Finalizado"),

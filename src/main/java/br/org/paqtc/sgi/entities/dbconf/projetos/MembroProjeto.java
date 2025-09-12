@@ -1,11 +1,9 @@
-package br.org.paqtc.sgi.entities.projetos;
+package br.org.paqtc.sgi.entities.dbconf.projetos;
 
 import br.org.paqtc.sgi.dto.MembroProjetoDto;
-import br.org.paqtc.sgi.entities.ids.MembroProjetoId;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import br.org.paqtc.sgi.entities.dbconf.ids.MembroProjetoId;
+import br.org.paqtc.sgi.entities.dbconf.usuarios.Usuario;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -83,10 +81,21 @@ public class MembroProjeto implements Serializable {
     @Column(name = "PeriodoFinal")
     private String periodoFinal;
 
+    @MapsId("idCoord")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tsMembro_idCoord")
+    private Usuario coordenador;
+
+    @MapsId("idProjeto")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tsMembro_idProjeto")
+    private Projeto projeto;
+
     public MembroProjetoDto toDto() {
         return MembroProjetoDto.builder()
                 .id(this.getId().getIdMembro())
                 .idProjeto(this.getId().getIdProjeto())
+                .nomeProjeto(this.projeto.getNome())
                 .cargaHorario(this.getCargaHorario())
                 .periodoInicial(this.getPeriodoInicial())
                 .periodoFinal(this.getPeriodoFinal())

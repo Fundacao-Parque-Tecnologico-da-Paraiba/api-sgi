@@ -1,6 +1,6 @@
 package br.org.paqtc.sgi.dto;
 
-import br.org.paqtc.sgi.entities.enums.SituacaoProjeto;
+import br.org.paqtc.sgi.entities.dbconf.enums.SituacaoProjeto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

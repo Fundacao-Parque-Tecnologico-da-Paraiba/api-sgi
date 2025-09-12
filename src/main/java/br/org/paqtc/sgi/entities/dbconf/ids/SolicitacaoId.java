@@ -1,4 +1,4 @@
-package br.org.paqtc.sgi.entities.ids;
+package br.org.paqtc.sgi.entities.dbconf.ids;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

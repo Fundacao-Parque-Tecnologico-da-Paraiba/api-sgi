@@ -1,11 +1,11 @@
 package br.org.paqtc.sgi.services;
 
 import br.org.paqtc.sgi.dto.ProjetoDto;
-import br.org.paqtc.sgi.entities.enums.SituacaoProjeto;
-import br.org.paqtc.sgi.entities.projetos.Projeto;
+import br.org.paqtc.sgi.entities.dbconf.enums.SituacaoProjeto;
+import br.org.paqtc.sgi.entities.dbconf.projetos.Projeto;
 import br.org.paqtc.sgi.exceptions.ProjetoNaoExisteException;
-import br.org.paqtc.sgi.repositories.ProjetosRepository;
-import br.org.paqtc.sgi.repositories.specifications.ProjetoSpecification;
+import br.org.paqtc.sgi.repositories.dbconf.ProjetosRepository;
+import br.org.paqtc.sgi.repositories.dbconf.specifications.ProjetoSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 

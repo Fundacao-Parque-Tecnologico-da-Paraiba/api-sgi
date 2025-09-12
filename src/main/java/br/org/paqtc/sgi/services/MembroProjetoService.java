@@ -2,11 +2,13 @@ package br.org.paqtc.sgi.services;
 
 import br.org.paqtc.sgi.dto.MembroProjetoDto;
 import br.org.paqtc.sgi.dto.MembrosPorProjetoDto;
-import br.org.paqtc.sgi.entities.projetos.MembroProjeto;
-import br.org.paqtc.sgi.entities.projetos.Projeto;
-import br.org.paqtc.sgi.repositories.MembroProjetoRepository;
-import br.org.paqtc.sgi.repositories.ProjetosRepository;
-import br.org.paqtc.sgi.repositories.specifications.ProjetoSpecification;
+import br.org.paqtc.sgi.entities.dbconf.projetos.MembroProjeto;
+import br.org.paqtc.sgi.entities.dbconf.projetos.Projeto;
+import br.org.paqtc.sgi.exceptions.ProjetoNaoExisteException;
+import br.org.paqtc.sgi.repositories.dbconf.MembroProjetoRepository;
+import br.org.paqtc.sgi.repositories.dbconf.ProjetosRepository;
+import br.org.paqtc.sgi.repositories.dbconf.specifications.ProjetoSpecification;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class MembroProjetoService {
     private final MembroProjetoRepository membroProjetoRepository;
     private final ProjetosRepository  projetosRepository;
@@ -26,12 +29,12 @@ public class MembroProjetoService {
     }
 
     public List<MembrosPorProjetoDto> getMembrosDoProjeto(String nomeProjeto, Long idProjeto) {
-        List<Projeto> projetos;
+        List<Projeto> projetos = new ArrayList<>();
 
         if (nomeProjeto == null && idProjeto == null) {
             projetos = projetosRepository.findAll();
         } else if (idProjeto != null) {
-            projetos = projetosRepository.findAllById_IdProjeto(idProjeto);
+            projetos.add(projetosRepository.findById(idProjeto).orElseThrow(ProjetoNaoExisteException::new));
         } else {
             projetos = projetosRepository.findAll(
                     ProjetoSpecification.nomeProjetoContains(nomeProjeto)
@@ -42,33 +45,23 @@ public class MembroProjetoService {
             return Collections.emptyList();
         }
 
-        Map<Long, Projeto> ids = projetos.stream()
-                .collect(Collectors.toMap(
-                        p -> p.getId().getIdProjeto(),
-                        p -> p
-                ));
+        List<Long> ids = projetos.stream()
+                .map(Projeto::getIdProjeto).toList();
 
         List<MembroProjeto> membroProjetos = buscarMembrosDoProjeto(
-                new ArrayList<>(ids.keySet())
+                ids
         );
 
         Map<Long, List<MembroProjetoDto>> membrosAgrupados = membroProjetos.stream()
-                .map(membro -> {
-                    MembroProjetoDto dto = membro.toDto();
-                    Projeto projeto = ids.get(membro.getId().getIdProjeto());
-                    if (projeto != null) {
-                        dto.setNomeProjeto(projeto.getNome());
-                    }
-                    return dto;
-                }).sorted()
+                .map(MembroProjeto::toDto).sorted()
                 .collect(Collectors.groupingBy(MembroProjetoDto::getIdProjeto));
 
-        return ids.values().stream()
-                .map(projeto -> MembrosPorProjetoDto.builder()
-                        .idProjeto(projeto.getId().getIdProjeto())
-                        .nomeProjeto(projeto.getNome())
+        return projetos.stream()
+                .map(proj -> MembrosPorProjetoDto.builder()
+                        .idProjeto(proj.getIdProjeto())
+                        .nomeProjeto(proj.getNome())
                         .membroProjetoDtos(
-                                membrosAgrupados.getOrDefault(projeto.getId().getIdProjeto(), Collections.emptyList())
+                                membrosAgrupados.getOrDefault(proj.getIdProjeto(), Collections.emptyList())
                         )
                         .build()
                 )

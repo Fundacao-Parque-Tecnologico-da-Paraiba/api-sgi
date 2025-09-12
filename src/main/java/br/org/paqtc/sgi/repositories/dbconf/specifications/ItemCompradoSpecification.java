@@ -1,6 +1,6 @@
-package br.org.paqtc.sgi.repositories.specifications;
+package br.org.paqtc.sgi.repositories.dbconf.specifications;
 
-import br.org.paqtc.sgi.entities.compras.ItemComprado;
+import br.org.paqtc.sgi.entities.dbconf.compras.ItemComprado;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ItemCompradoSpecification {

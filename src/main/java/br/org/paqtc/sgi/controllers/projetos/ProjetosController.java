@@ -1,9 +1,8 @@
 package br.org.paqtc.sgi.controllers.projetos;
 
-import br.org.paqtc.sgi.dto.MembroProjetoDto;
 import br.org.paqtc.sgi.dto.MembrosPorProjetoDto;
 import br.org.paqtc.sgi.dto.ProjetoDto;
-import br.org.paqtc.sgi.entities.enums.SituacaoProjeto;
+import br.org.paqtc.sgi.entities.dbconf.enums.SituacaoProjeto;
 import br.org.paqtc.sgi.services.MembroProjetoService;
 import br.org.paqtc.sgi.services.ProjetosService;
 import org.springframework.http.ResponseEntity;
