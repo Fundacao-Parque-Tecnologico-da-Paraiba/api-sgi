@@ -1,12 +1,9 @@
-package br.org.paqtc.sgi.entities.projetos;
+package br.org.paqtc.sgi.entities.dbconf.projetos;
 
 import br.org.paqtc.sgi.dto.ProjetoDto;
-import br.org.paqtc.sgi.entities.enums.SituacaoProjeto;
-import br.org.paqtc.sgi.entities.ids.ProjetoId;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import br.org.paqtc.sgi.entities.dbconf.enums.SituacaoProjeto;
+import br.org.paqtc.sgi.entities.dbconf.usuarios.Usuario;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,17 +17,21 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Projeto implements Serializable {
 
-    @EmbeddedId
-    private ProjetoId id;
+    @Id()
+    @Column(name = "idProjeto")
+    private Long idProjeto;
+
+    @Column(name = "tsUsuario_idUsuario")
+    private Long idUsuario;
+
+    @Column(name = "idUsuario_idCoord")
+    private Long idCoord;
+
+    @Column(name = "idUsuario_idCoordMonitor")
+    private Long idCoordMonitor;
 
     @Column(name = "NmProjeto")
     private String nome;
-
-    @Column(name = "NmCoordenador")
-    private String coordenador;
-
-    @Column(name = "NmGerente")
-    private String gerente;
 
     @Column(name = "NmMonitor")
     private String monitor;
@@ -83,12 +84,27 @@ public class Projeto implements Serializable {
     @Column(name = "TemRH")
     private String temRh;
 
+    @MapsId("idUsuario")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tsUsuario_idUsuario", insertable = false, updatable = false)
+    private Usuario coordenador;
+
+    @MapsId("idCoord")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idUsuario_idCoord", insertable = false, updatable = false)
+    private Usuario gerente;
+
+    @MapsId("idCoordMonitor")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idUsuario_idCoordMonitor", insertable = false, updatable = false)
+    private Usuario coordMonitor;
+
     public ProjetoDto toDto() {
         return ProjetoDto.builder()
                 .nomeProjeto(nome)
-                .nomeCoordenador(coordenador)
-                .nomeGerente(gerente)
-                .id(id.getIdProjeto())
+                .nomeCoordenador(coordenador.getNome())
+                .nomeGerente(gerente.getNome())
+                .id(idProjeto)
                 .situacaoProjeto(SituacaoProjeto.getByDescricao(situacao))
                 .build();
     }

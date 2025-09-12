@@ -1,10 +1,10 @@
 package br.org.paqtc.sgi.services;
 
 import br.org.paqtc.sgi.dto.ItemCompradoDto;
-import br.org.paqtc.sgi.entities.compras.ItemComprado;
+import br.org.paqtc.sgi.entities.dbconf.compras.ItemComprado;
 import br.org.paqtc.sgi.exceptions.ItemCompradoNaoExisteException;
-import br.org.paqtc.sgi.repositories.ItemCompradoRepository;
-import br.org.paqtc.sgi.repositories.specifications.ItemCompradoSpecification;
+import br.org.paqtc.sgi.repositories.dbconf.ItemCompradoRepository;
+import br.org.paqtc.sgi.repositories.dbconf.specifications.ItemCompradoSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;

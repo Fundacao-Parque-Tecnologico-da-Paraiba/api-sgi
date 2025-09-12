@@ -1,8 +1,7 @@
-package br.org.paqtc.sgi.entities.compras;
+package br.org.paqtc.sgi.entities.dbconf.compras;
 
 import br.org.paqtc.sgi.dto.ItemCompradoDto;
-import br.org.paqtc.sgi.dto.SolicitacoesDto;
-import br.org.paqtc.sgi.entities.solicitacoes.Solicitacoes;
+import br.org.paqtc.sgi.entities.dbconf.solicitacoes.Solicitacoes;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

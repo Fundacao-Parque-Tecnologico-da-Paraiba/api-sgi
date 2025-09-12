@@ -1,10 +1,10 @@
 package br.org.paqtc.sgi.controllers.projetos;
 
 import br.org.paqtc.sgi.dto.ExceptionDto;
-import br.org.paqtc.sgi.dto.ItemCompradoDto;
+import br.org.paqtc.sgi.dto.MembrosPorProjetoDto;
 import br.org.paqtc.sgi.dto.ProjetoDto;
-import br.org.paqtc.sgi.entities.enums.SituacaoProjeto;
-import br.org.paqtc.sgi.repositories.ProjetosRepository;
+import br.org.paqtc.sgi.entities.dbconf.enums.SituacaoProjeto;
+import br.org.paqtc.sgi.repositories.dbconf.ProjetosRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -59,7 +59,7 @@ class ProjetosControllerTest {
             List<ProjetoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
             assertNotNull(respostas);
             assertFalse(respostas.isEmpty());
-            assertEquals(1024, respostas.size());
+            assertEquals(1025, respostas.size());
         }
     }
 
@@ -116,7 +116,7 @@ class ProjetosControllerTest {
             List<ProjetoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
             assertNotNull(respostas);
             assertFalse(respostas.isEmpty());
-            assertEquals(107, respostas.size());
+            assertEquals(15, respostas.size());
         }
 
         @Test
@@ -152,7 +152,7 @@ class ProjetosControllerTest {
             List<ProjetoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
             assertNotNull(respostas);
             assertFalse(respostas.isEmpty());
-            assertEquals(58, respostas.size());
+            assertEquals(49, respostas.size());
         }
 
         @Test
@@ -272,7 +272,61 @@ class ProjetosControllerTest {
             List<ProjetoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
             assertNotNull(respostas);
             assertFalse(respostas.isEmpty());
-            assertEquals(478, respostas.size());
+            assertEquals(479, respostas.size());
+        }
+    }
+
+    @Nested
+    @DisplayName("Buscando todos os membros de projeto")
+    class GetAllMembrosDeProjetos {
+
+        @Test
+        @DisplayName("Quando Busco todos os membros de projeto")
+        void testBuscandoProjetosComSucessoVigente() throws Exception {
+            String responseJsonString = driver.perform(get(URI_PROJETOS + "/membros")
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            List<MembrosPorProjetoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
+            assertNotNull(respostas);
+            assertFalse(respostas.isEmpty());
+            assertEquals(1025, respostas.size());
+        }
+
+        @Test
+        @DisplayName("Quando Busco todos os projeto finalizados")
+        void testBuscandoProjetosComSucessoFinalizados() throws Exception {
+            String responseJsonString = driver.perform(get(URI_PROJETOS + "/membros")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("nomeProjeto", "Dell")
+                    )
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            List<MembrosPorProjetoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
+            assertNotNull(respostas);
+            assertFalse(respostas.isEmpty());
+            assertEquals(54, respostas.size());
+        }
+
+        @Test
+        @DisplayName("Quando Busco todos os projeto finalizados")
+        void testBuscandoMembrosDeProjetoPorId() throws Exception {
+            String responseJsonString = driver.perform(get(URI_PROJETOS + "/membros")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("idProjeto", "366")
+                    )
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+            List<MembrosPorProjetoDto> respostas = objectMapper.readValue(responseJsonString, new TypeReference<>() {});
+            assertNotNull(respostas);
+            assertFalse(respostas.isEmpty());
+            assertEquals(1, respostas.size());
+            assertEquals(366, respostas.get(0).getIdProjeto());
+            assertEquals(13, respostas.get(0).getMembroProjetoDtos().size());
         }
     }
 }

@@ -1,4 +1,4 @@
-package br.org.paqtc.sgi.entities.usuarios;
+package br.org.paqtc.sgi.entities.dbconf.usuarios;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

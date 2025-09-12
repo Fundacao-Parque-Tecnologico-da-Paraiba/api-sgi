@@ -1,7 +1,7 @@
-package br.org.paqtc.sgi.entities.solicitacoes;
+package br.org.paqtc.sgi.entities.dbconf.solicitacoes;
 
 import br.org.paqtc.sgi.dto.SolicitacoesDto;
-import br.org.paqtc.sgi.entities.ids.SolicitacaoId;
+import br.org.paqtc.sgi.entities.dbconf.ids.SolicitacaoId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

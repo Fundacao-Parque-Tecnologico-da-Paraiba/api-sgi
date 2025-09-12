@@ -2,7 +2,7 @@ package br.org.paqtc.sgi.controllers.compras;
 
 import br.org.paqtc.sgi.dto.ExceptionDto;
 import br.org.paqtc.sgi.dto.ItemCompradoDto;
-import br.org.paqtc.sgi.repositories.ItemCompradoRepository;
+import br.org.paqtc.sgi.repositories.dbconf.ItemCompradoRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

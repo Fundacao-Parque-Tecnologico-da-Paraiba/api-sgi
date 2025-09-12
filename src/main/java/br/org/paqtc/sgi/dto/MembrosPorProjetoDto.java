@@ -1,19 +1,18 @@
 package br.org.paqtc.sgi.dto;
 
-import br.org.paqtc.sgi.entities.dbconf.enums.SituacaoProjeto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjetoDto {
-    private Long id;
+public class MembrosPorProjetoDto {
     private String nomeProjeto;
-    private String nomeCoordenador;
-    private String nomeGerente;
-    private SituacaoProjeto situacaoProjeto;
+    private Long idProjeto;
+    private List<MembroProjetoDto> membroProjetoDtos;
 }
